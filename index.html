@@ -3,257 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ukrainian Language Practice</title>
+    <title>Daily Affection: Ukrainian & Japanese</title>
     <style>
-        :root {
-            --ua-blue: #0057B8;
-            --ua-yellow: #FFD700;
-            --dark-text: #333;
-            --light-bg: #f4f4f9;
-        }
-
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--light-bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         h1 {
-            color: var(--ua-blue);
-            margin-bottom: 20px;
-        }
-
-        /* Card Container (3D Space) */
-        .scene {
-            width: 300px;
-            height: 200px;
-            perspective: 600px;
-            cursor: pointer;
-        }
-
-        /* The Card itself */
-        .card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 15px;
-        }
-
-        .card.is-flipped {
-            transform: rotateY(180deg);
-        }
-
-        /* Front and Back styling */
-        .card__face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
             text-align: center;
-            padding: 20px;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+            background: #e8e8e8;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
             box-sizing: border-box;
         }
 
-        .card__face--front {
-            background-color: white;
-            color: var(--ua-blue);
-            border: 2px solid var(--ua-blue);
-        }
-
-        .card__face--back {
-            background-color: var(--ua-blue);
+        /* Grid Layout */
+        .grid-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            font-weight: bold;
+            padding: 15px;
+            background-color: #333;
             color: white;
-            transform: rotateY(180deg);
+            border-radius: 8px 8px 0 0;
+            text-align: center;
         }
 
-        .transliteration {
-            font-size: 16px;
-            font-weight: normal;
-            margin-top: 10px;
-            color: #ddd;
-            font-style: italic;
-        }
-
-        .category-tag {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 12px;
-            opacity: 0.7;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Controls */
-        .controls {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: white;
+            border-bottom: 1px solid #eee;
             transition: background 0.2s;
-            background-color: var(--ua-blue);
-            color: white;
         }
 
-        button:hover {
-            background-color: #004494;
+        .row:last-child {
+            border-radius: 0 0 8px 8px;
+            border-bottom: none;
         }
 
-        button.secondary {
-            background-color: #ddd;
-            color: var(--dark-text);
-        }
-        
-        button.secondary:hover {
-            background-color: #ccc;
+        .row:hover {
+            background-color: #fafafa;
         }
 
-        .progress {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
+        .cell {
+            padding: 20px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Playable Columns */
+        .playable {
+            cursor: pointer;
+            color: #0056b3;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .playable:hover {
+            background-color: #eef7ff;
+            color: #003d80;
+            font-weight: 500;
+        }
+
+        .playable::after {
+            content: "🔊";
+            font-size: 0.8em;
+            margin-left: 8px;
+            opacity: 0.5;
+        }
+
+        .playable:hover::after {
+            opacity: 1;
+        }
+
+        /* Center Column (English) */
+        .translation {
+            color: #555;
+            font-style: italic;
+            border-left: 1px solid #eee;
+            border-right: 1px solid #eee;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .grid-header { display: none; }
+            .row {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                border-radius: 8px;
+                border: none;
+            }
+            .translation {
+                border: none;
+                background-color: #f9f9f9;
+                order: 3; /* Move English to bottom on mobile */
+                font-size: 0.9em;
+                padding: 10px;
+            }
+            .playable {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>🇺🇦 Learn Ukrainian</h1>
+    <h1>Daily Affection Expressions</h1>
+    
+    <div class="instructions">
+        Click on the <strong>Ukrainian</strong> or <strong>Japanese</strong> text to play the audio.
+    </div>
 
-    <div class="scene" onclick="flipCard()">
-        <div class="card" id="flashcard">
-            <div class="card__face card__face--front">
-                <span class="category-tag" id="category">Greeting</span>
-                <div id="ukrainian-text">Привіт</div>
-            </div>
-            <div class="card__face card__face--back">
-                <div id="english-text">Hello</div>
-                <div class="transliteration" id="pronunciation">Pryvit</div>
-            </div>
+    <div id="app">
+        <div class="grid-header">
+            <div>Ukrainian 🇺🇦</div>
+            <div>English 🇺🇸</div>
+            <div>Japanese 🇯🇵</div>
         </div>
-    </div>
-
-    <div class="progress">
-        Card <span id="current-count">1</span> of <span id="total-count">0</span>
-    </div>
-
-    <div class="controls">
-        <button class="secondary" onclick="prevCard()">Previous</button>
-        <button onclick="nextCard()">Next Word</button>
-    </div>
-    <div class="controls">
-        <button class="secondary" onclick="randomize()">🔀 Shuffle</button>
-    </div>
+        </div>
 
     <script>
-        // Vocabulary Data
-        // You can add more words to this list easily
-        const vocabulary = [
-            { ua: "Привіт", en: "Hello", pron: "Pryvit", cat: "Greeting" },
-            { ua: "Дякую", en: "Thank you", pron: "Diakuiu", cat: "Common" },
-            { ua: "Будь ласка", en: "Please / You're welcome", pron: "Bud laska", cat: "Common" },
-            { ua: "Так", en: "Yes", pron: "Tak", cat: "Common" },
-            { ua: "Ні", en: "No", pron: "Ni", cat: "Common" },
-            { ua: "Як справи?", en: "How are you?", pron: "Yak spravy?", cat: "Phrase" },
-            { ua: "Добрий ранок", en: "Good morning", pron: "Dobryi ranok", cat: "Greeting" },
-            { ua: "Вода", en: "Water", pron: "Voda", cat: "Food" },
-            { ua: "Друг", en: "Friend", pron: "Druh", cat: "People" },
-            { ua: "Кіт", en: "Cat", pron: "Kit", cat: "Animals" },
-            { ua: "Собака", en: "Dog", pron: "Sobaka", cat: "Animals" },
-            { ua: "Я не розумію", en: "I don't understand", pron: "Ya ne rozumiyu", cat: "Phrase" }
+        // Data derived from our previous conversation
+        const phrases = [
+            { id: 1, uk: "Привіт, сонечко.", en: "Hey, sunshine.", ja: "やッほー。" },
+            { id: 2, uk: "Як ти, моя хороша?", en: "How are you doing?", ja: "元気？" },
+            { id: 3, uk: "Скучив за тобою.", en: "I missed you.", ja: "会いたかったな。" },
+            { id: 4, uk: "Ти у мене найкраща.", en: "You really are the best.", ja: "やっぱりあなたが一番。" },
+            { id: 5, uk: "Моя красуня.", en: "You look great.", ja: "かっこいいね。" },
+            { id: 6, uk: "Ти сьогодні просто космос.", en: "You are out of this world today.", ja: "今日のあなた、めっちゃイケてる！" },
+            { id: 7, uk: "Обіймаю міцно.", en: "Sending a big hug.", ja: "ぎゅーってしたい。" },
+            { id: 8, uk: "Цілую в носик.", en: "Kisses.", ja: "チュッてして。" },
+            { id: 9, uk: "Моя маленька.", en: "Hey, honey.", ja: "ねえ、あなた。" },
+            { id: 10, uk: "Ти моя радість.", en: "You bring me joy.", ja: "私の癒しだよ。" },
+            { id: 11, uk: "Гарного дня, квіточко.", en: "Have a wonderful day.", ja: "今日も頑張ってね。" },
+            { id: 12, uk: "Чекаю на тебе.", en: "Waiting for you.", ja: "待ってるね。" },
+            { id: 13, uk: "Хочу тебе побачити.", en: "Can't wait to see you.", ja: "早く会いたいな。" },
+            { id: 14, uk: "Ти – мій позитив.", en: "You give me good energy.", ja: "元気もらえるよ。" },
+            { id: 15, uk: "Солодких снів, моя зірочка.", en: "Goodnight, sweet dreams.", ja: "おやすみ、いい夢見てね。" }
         ];
 
-        let currentIndex = 0;
-        const cardElement = document.getElementById('flashcard');
-        const uaText = document.getElementById('ukrainian-text');
-        const enText = document.getElementById('english-text');
-        const pronText = document.getElementById('pronunciation');
-        const catText = document.getElementById('category');
-        const currentCountSpan = document.getElementById('current-count');
-        const totalCountSpan = document.getElementById('total-count');
+        const appContainer = document.getElementById('app');
+        let currentAudio = null;
 
-        // Initialize
-        totalCountSpan.textContent = vocabulary.length;
-        updateCard();
+        // Function to handle audio playback
+        function playAudio(langFolder, id) {
+            // Stop currently playing audio if exists
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
 
-        function updateCard() {
-            // Reset flip state when changing cards
-            cardElement.classList.remove('is-flipped');
+            // Format ID to match filename (e.g., 1 -> "01")
+            const formattedId = String(id).padStart(2, '0');
+            const filename = `${formattedId}_Chapter 1.mp3`;
+            const path = `${langFolder}/${filename}`;
+
+            currentAudio = new Audio(path);
             
-            // Allow a brief moment for the flip reset before changing text
-            setTimeout(() => {
-                const word = vocabulary[currentIndex];
-                uaText.textContent = word.ua;
-                enText.textContent = word.en;
-                pronText.textContent = word.pron;
-                catText.textContent = word.cat;
-                currentCountSpan.textContent = currentIndex + 1;
-            }, 200);
+            currentAudio.play().catch(error => {
+                console.error("Playback failed:", error);
+                alert(`Could not play audio. Ensure the file exists at: ${path}`);
+            });
         }
 
-        function flipCard() {
-            cardElement.classList.toggle('is-flipped');
-        }
+        // Generate HTML elements
+        phrases.forEach(phrase => {
+            const row = document.createElement('div');
+            row.className = 'row';
 
-        function nextCard() {
-            if (currentIndex < vocabulary.length - 1) {
-                currentIndex++;
-            } else {
-                currentIndex = 0; // Loop back to start
-            }
-            updateCard();
-        }
+            // Ukrainian Cell
+            const ukCell = document.createElement('div');
+            ukCell.className = 'cell playable';
+            ukCell.textContent = phrase.uk;
+            ukCell.onclick = () => playAudio('ukrainian', phrase.id);
 
-        function prevCard() {
-            if (currentIndex > 0) {
-                currentIndex--;
-            } else {
-                currentIndex = vocabulary.length - 1; // Loop to end
-            }
-            updateCard();
-        }
+            // English Cell (Middle)
+            const enCell = document.createElement('div');
+            enCell.className = 'cell translation';
+            enCell.textContent = phrase.en;
 
-        function randomize() {
-            // Fisher-Yates Shuffle Algorithm
-            for (let i = vocabulary.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [vocabulary[i], vocabulary[j]] = [vocabulary[j], vocabulary[i]];
-            }
-            currentIndex = 0;
-            updateCard();
-        }
+            // Japanese Cell
+            const jaCell = document.createElement('div');
+            jaCell.className = 'cell playable';
+            jaCell.textContent = phrase.ja;
+            jaCell.onclick = () => playAudio('japanese', phrase.id);
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
-                e.preventDefault(); // Prevent scrolling
-                flipCard();
-            } else if (e.code === 'ArrowRight') {
-                nextCard();
-            } else if (e.code === 'ArrowLeft') {
-                prevCard();
-            }
+            row.appendChild(ukCell);
+            row.appendChild(enCell);
+            row.appendChild(jaCell);
+            
+            appContainer.appendChild(row);
         });
     </script>
 </body>
