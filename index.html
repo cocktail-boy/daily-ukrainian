@@ -2,218 +2,213 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Affection: Ukrainian & Japanese</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Affection</title>
     <style>
+        :root {
+            --ua-blue-pastel: #e3f2fd;
+            --ua-text: #1976d2;
+            --jp-pink-pastel: #fce4ec;
+            --jp-text: #c2185b;
+            --neutral-bg: #fafafa;
+            --border-color: #eee;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--neutral-bg);
             color: #333;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 10px;
+            /* Prevent horizontal scroll on small screens */
+            overflow-x: hidden; 
         }
 
         h1 {
             text-align: center;
-            color: #444;
-            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: #555;
+            margin: 10px 0 15px 0;
+            font-weight: 600;
         }
 
-        .instructions {
+        /* Instructions text */
+        .hint {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            color: #666;
-            background: #e8e8e8;
-            padding: 10px;
-            border-radius: 8px;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 15px;
         }
 
-        /* Grid Layout */
-        .grid-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            font-weight: bold;
-            padding: 15px;
-            background-color: #333;
-            color: white;
-            border-radius: 8px 8px 0 0;
-            text-align: center;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+        /* Main Grid Container */
+        #app {
             background: white;
-            border-bottom: 1px solid #eee;
-            transition: background 0.2s;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-width: 600px; /* Constrain width on tablets/desktop */
+            margin: 0 auto;
+            overflow: hidden;
         }
 
+        /* Grid Layout: 3 Columns. 
+           UA (36%) - EN (28%) - JP (36%) 
+        */
+        .grid-header, .row {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1.3fr; 
+        }
+
+        /* Header Styling (Gradient Theme) */
+        .grid-header {
+            /* Gradient from UA Blue to JP Pink */
+            background: linear-gradient(90deg, var(--ua-blue-pastel) 0%, #fff 50%, var(--jp-pink-pastel) 100%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .grid-header div {
+            padding: 12px 5px;
+            text-align: center;
+        }
+
+        /* Row Styling */
+        .row {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
         .row:last-child {
-            border-radius: 0 0 8px 8px;
             border-bottom: none;
         }
 
-        .row:hover {
-            background-color: #fafafa;
-        }
-
+        /* Cell Styling */
         .cell {
-            padding: 20px 10px;
+            padding: 10px 5px;
+            font-size: 0.85rem; /* Small font for mobile */
+            line-height: 1.3;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            line-height: 1.4;
+            word-break: break-word; /* Prevent overflow */
         }
 
-        /* Playable Columns */
+        /* Playable Columns (UA & JP) */
         .playable {
             cursor: pointer;
-            color: #0056b3;
+            transition: background-color 0.2s;
             position: relative;
-            transition: color 0.2s;
-        }
-
-        .playable:hover {
-            background-color: #eef7ff;
-            color: #003d80;
             font-weight: 500;
         }
 
-        .playable::after {
-            content: "🔊";
-            font-size: 0.8em;
-            margin-left: 8px;
-            opacity: 0.5;
+        /* Ukrainian Specifics */
+        .ua-col {
+            color: var(--ua-text);
+        }
+        .ua-col:active, .ua-col:hover {
+            background-color: var(--ua-blue-pastel);
         }
 
-        .playable:hover::after {
-            opacity: 1;
+        /* Japanese Specifics */
+        .jp-col {
+            color: var(--jp-text);
+        }
+        .jp-col:active, .jp-col:hover {
+            background-color: var(--jp-pink-pastel);
         }
 
-        /* Center Column (English) */
-        .translation {
-            color: #555;
+        /* English Specifics (Middle) */
+        .en-col {
+            color: #888;
+            font-size: 0.75rem; /* Slightly smaller than main langs */
             font-style: italic;
-            border-left: 1px solid #eee;
-            border-right: 1px solid #eee;
+            border-left: 1px solid #f5f5f5;
+            border-right: 1px solid #f5f5f5;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .grid-header { display: none; }
-            .row {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 15px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-                border-radius: 8px;
-                border: none;
-            }
-            .translation {
-                border: none;
-                background-color: #f9f9f9;
-                order: 3; /* Move English to bottom on mobile */
-                font-size: 0.9em;
-                padding: 10px;
-            }
-            .playable {
-                padding: 15px;
-            }
+        /* Audio Indicator (Small icon) */
+        .icon {
+            font-size: 0.7em;
+            margin-left: 3px;
+            opacity: 0.3;
         }
+
     </style>
 </head>
 <body>
 
-    <h1>Daily Affection Expressions</h1>
-    
-    <div class="instructions">
-        Click on the <strong>Ukrainian</strong> or <strong>Japanese</strong> text to play the audio.
-    </div>
+    <h1>Daily Affection</h1>
+    <div class="hint">Tap blue or pink text to play audio</div>
 
     <div id="app">
         <div class="grid-header">
-            <div>Ukrainian 🇺🇦</div>
-            <div>English 🇺🇸</div>
-            <div>Japanese 🇯🇵</div>
+            <div>Ukrainian</div>
+            <div>English</div>
+            <div>Japanese</div>
         </div>
         </div>
 
     <script>
-        // Data derived from our previous conversation
         const phrases = [
-            { id: 1, uk: "Привіт, сонечко.", en: "Hey, sunshine.", ja: "やッほー。" },
+            { id: 1, uk: "Привіт, сонечко.", en: "Hey, sunshine.", ja: "やっほー。" }, // Fixed typo here
             { id: 2, uk: "Як ти, моя хороша?", en: "How are you doing?", ja: "元気？" },
             { id: 3, uk: "Скучив за тобою.", en: "I missed you.", ja: "会いたかったな。" },
-            { id: 4, uk: "Ти у мене найкраща.", en: "You really are the best.", ja: "やっぱりあなたが一番。" },
+            { id: 4, uk: "Ти у мене найкраща.", en: "You're the best.", ja: "やっぱりあなたが一番。" },
             { id: 5, uk: "Моя красуня.", en: "You look great.", ja: "かっこいいね。" },
-            { id: 6, uk: "Ти сьогодні просто космос.", en: "You are out of this world today.", ja: "今日のあなた、めっちゃイケてる！" },
-            { id: 7, uk: "Обіймаю міцно.", en: "Sending a big hug.", ja: "ぎゅーってしたい。" },
+            { id: 6, uk: "Ти сьогодні просто космос.", en: "Out of this world.", ja: "今日のあなた、めっちゃイケてる！" },
+            { id: 7, uk: "Обіймаю міцно.", en: "Big hug.", ja: "ぎゅーってしたい。" },
             { id: 8, uk: "Цілую в носик.", en: "Kisses.", ja: "チュッてして。" },
             { id: 9, uk: "Моя маленька.", en: "Hey, honey.", ja: "ねえ、あなた。" },
             { id: 10, uk: "Ти моя радість.", en: "You bring me joy.", ja: "私の癒しだよ。" },
-            { id: 11, uk: "Гарного дня, квіточко.", en: "Have a wonderful day.", ja: "今日も頑張ってね。" },
+            { id: 11, uk: "Гарного дня, квіточко.", en: "Have a good day.", ja: "今日も頑張ってね。" },
             { id: 12, uk: "Чекаю на тебе.", en: "Waiting for you.", ja: "待ってるね。" },
-            { id: 13, uk: "Хочу тебе побачити.", en: "Can't wait to see you.", ja: "早く会いたいな。" },
-            { id: 14, uk: "Ти – мій позитив.", en: "You give me good energy.", ja: "元気もらえるよ。" },
-            { id: 15, uk: "Солодких снів, моя зірочка.", en: "Goodnight, sweet dreams.", ja: "おやすみ、いい夢見てね。" }
+            { id: 13, uk: "Хочу тебе побачити.", en: "Want to see you.", ja: "早く会いたいな。" },
+            { id: 14, uk: "Ти – мій позитив.", en: "Good energy.", ja: "元気もらえるよ。" },
+            { id: 15, uk: "Солодких снів.", en: "Sweet dreams.", ja: "おやすみ、いい夢見てね。" }
         ];
 
         const appContainer = document.getElementById('app');
         let currentAudio = null;
 
-        // Function to handle audio playback
         function playAudio(langFolder, id) {
-            // Stop currently playing audio if exists
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
 
-            // Format ID to match filename (e.g., 1 -> "01")
             const formattedId = String(id).padStart(2, '0');
             const filename = `${formattedId}_Chapter 1.mp3`;
             const path = `${langFolder}/${filename}`;
 
             currentAudio = new Audio(path);
-            
-            currentAudio.play().catch(error => {
-                console.error("Playback failed:", error);
-                alert(`Could not play audio. Ensure the file exists at: ${path}`);
-            });
+            currentAudio.play().catch(e => alert("Audio file not found: " + path));
         }
 
-        // Generate HTML elements
-        phrases.forEach(phrase => {
+        phrases.forEach(p => {
             const row = document.createElement('div');
             row.className = 'row';
 
-            // Ukrainian Cell
-            const ukCell = document.createElement('div');
-            ukCell.className = 'cell playable';
-            ukCell.textContent = phrase.uk;
-            ukCell.onclick = () => playAudio('ukrainian', phrase.id);
+            // Ukrainian
+            const uk = document.createElement('div');
+            uk.className = 'cell playable ua-col';
+            uk.innerHTML = `${p.uk}<span class="icon">🔊</span>`;
+            uk.onclick = () => playAudio('ukrainian', p.id);
 
-            // English Cell (Middle)
-            const enCell = document.createElement('div');
-            enCell.className = 'cell translation';
-            enCell.textContent = phrase.en;
+            // English
+            const en = document.createElement('div');
+            en.className = 'cell en-col';
+            en.textContent = p.en;
 
-            // Japanese Cell
-            const jaCell = document.createElement('div');
-            jaCell.className = 'cell playable';
-            jaCell.textContent = phrase.ja;
-            jaCell.onclick = () => playAudio('japanese', phrase.id);
+            // Japanese
+            const ja = document.createElement('div');
+            ja.className = 'cell playable jp-col';
+            ja.innerHTML = `${p.ja}<span class="icon">🔊</span>`;
+            ja.onclick = () => playAudio('japanese', p.id);
 
-            row.appendChild(ukCell);
-            row.appendChild(enCell);
-            row.appendChild(jaCell);
-            
+            row.append(uk, en, ja);
             appContainer.appendChild(row);
         });
     </script>
