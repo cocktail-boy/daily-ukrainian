@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Affection</title>
+    <title>Daily Affection v2.0</title>
     <style>
         :root {
-            --ua-blue-pastel: #e3f2fd;
-            --ua-text: #1976d2;
-            --jp-pink-pastel: #fce4ec;
-            --jp-text: #c2185b;
-            --neutral-bg: #fafafa;
-            --border-color: #eee;
+            --ua-bg: #e3f2fd;
+            --ua-text: #1565c0;
+            --jp-bg: #fce4ec;
+            --jp-text: #ad1457;
+            --sub-text: #757575;
+            --border: #eee;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--neutral-bg);
+            background-color: #fafafa;
             color: #333;
             margin: 0;
             padding: 10px;
-            /* Prevent horizontal scroll on small screens */
             overflow-x: hidden; 
         }
 
@@ -28,46 +27,40 @@
             text-align: center;
             font-size: 1.2rem;
             color: #555;
-            margin: 10px 0 15px 0;
+            margin: 10px 0 5px 0;
             font-weight: 600;
         }
 
-        /* Instructions text */
         .hint {
             text-align: center;
             font-size: 0.75rem;
-            color: #888;
+            color: #999;
             margin-bottom: 15px;
         }
 
-        /* Main Grid Container */
         #app {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            max-width: 600px; /* Constrain width on tablets/desktop */
+            max-width: 600px;
             margin: 0 auto;
-            overflow: hidden;
+            border: 1px solid var(--border);
         }
 
-        /* Grid Layout: 3 Columns. 
-           UA (36%) - EN (28%) - JP (36%) 
-        */
+        /* 2-Column Grid */
         .grid-header, .row {
             display: grid;
-            grid-template-columns: 1.3fr 1fr 1.3fr; 
+            grid-template-columns: 1fr 1fr;
         }
 
-        /* Header Styling (Gradient Theme) */
+        /* Header */
         .grid-header {
-            /* Gradient from UA Blue to JP Pink */
-            background: linear-gradient(90deg, var(--ua-blue-pastel) 0%, #fff 50%, var(--jp-pink-pastel) 100%);
+            background: linear-gradient(90deg, var(--ua-bg) 0%, #fff 50%, var(--jp-bg) 100%);
             font-size: 0.8rem;
             font-weight: bold;
             color: #555;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #ddd;
         }
 
         .grid-header div {
@@ -75,99 +68,88 @@
             text-align: center;
         }
 
-        /* Row Styling */
+        /* Rows */
         .row {
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
         }
-        
         .row:last-child {
             border-bottom: none;
         }
 
-        /* Cell Styling */
+        /* Cells */
         .cell {
-            padding: 10px 5px;
-            font-size: 0.85rem; /* Small font for mobile */
-            line-height: 1.3;
+            padding: 15px 10px;
             display: flex;
+            flex-direction: column; /* Stack text vertically */
             align-items: center;
             justify-content: center;
             text-align: center;
-            word-break: break-word; /* Prevent overflow */
-        }
-
-        /* Playable Columns (UA & JP) */
-        .playable {
             cursor: pointer;
-            transition: background-color 0.2s;
             position: relative;
+            transition: background-color 0.2s;
+        }
+
+        /* Main Language Text */
+        .main-text {
+            font-size: 1rem;
             font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.3;
         }
 
-        /* Ukrainian Specifics */
-        .ua-col {
-            color: var(--ua-text);
-        }
-        .ua-col:active, .ua-col:hover {
-            background-color: var(--ua-blue-pastel);
-        }
-
-        /* Japanese Specifics */
-        .jp-col {
-            color: var(--jp-text);
-        }
-        .jp-col:active, .jp-col:hover {
-            background-color: var(--jp-pink-pastel);
-        }
-
-        /* English Specifics (Middle) */
-        .en-col {
-            color: #888;
-            font-size: 0.75rem; /* Slightly smaller than main langs */
+        /* Subtitle (Translation/Pronunciation) */
+        .sub-text {
+            font-size: 0.75rem;
+            color: var(--sub-text);
             font-style: italic;
-            border-left: 1px solid #f5f5f5;
-            border-right: 1px solid #f5f5f5;
+            line-height: 1.2;
         }
 
-        /* Audio Indicator (Small icon) */
+        /* Ukrainian Column Styling */
+        .ua-col .main-text { color: var(--ua-text); }
+        .ua-col:active, .ua-col:hover { background-color: var(--ua-bg); }
+
+        /* Japanese Column Styling */
+        .jp-col .main-text { color: var(--jp-text); }
+        .jp-col:active, .jp-col:hover { background-color: var(--jp-bg); }
+
+        /* Speaker Icon */
         .icon {
             font-size: 0.7em;
-            margin-left: 3px;
-            opacity: 0.3;
+            margin-left: 4px;
+            opacity: 0.2;
+            filter: grayscale(100%);
         }
 
     </style>
 </head>
 <body>
 
-    <h1>Daily Affection</h1>
-    <div class="hint">Tap blue or pink text to play audio</div>
+    <h1>Daily Affection v2.0</h1>
+    <div class="hint">Tap any box to play audio</div>
 
     <div id="app">
         <div class="grid-header">
-            <div>Ukrainian</div>
-            <div>English</div>
-            <div>Japanese</div>
+            <div>Ukrainian 🇺🇦</div>
+            <div>Japanese 🇯🇵</div>
         </div>
         </div>
 
     <script>
         const phrases = [
-            { id: 1, uk: "Привіт, сонечко.", en: "Hey, sunshine.", ja: "やっほー。" }, // Fixed typo here
-            { id: 2, uk: "Як ти, моя хороша?", en: "How are you doing?", ja: "元気？" },
-            { id: 3, uk: "Скучив за тобою.", en: "I missed you.", ja: "会いたかったな。" },
-            { id: 4, uk: "Ти у мене найкраща.", en: "You're the best.", ja: "やっぱりあなたが一番。" },
-            { id: 5, uk: "Моя красуня.", en: "You look great.", ja: "かっこいいね。" },
-            { id: 6, uk: "Ти сьогодні просто космос.", en: "Out of this world.", ja: "今日のあなた、めっちゃイケてる！" },
-            { id: 7, uk: "Обіймаю міцно.", en: "Big hug.", ja: "ぎゅーってしたい。" },
-            { id: 8, uk: "Цілую в носик.", en: "Kisses.", ja: "チュッてして。" },
-            { id: 9, uk: "Моя маленька.", en: "Hey, honey.", ja: "ねえ、あなた。" },
-            { id: 10, uk: "Ти моя радість.", en: "You bring me joy.", ja: "私の癒しだよ。" },
-            { id: 11, uk: "Гарного дня, квіточко.", en: "Have a good day.", ja: "今日も頑張ってね。" },
-            { id: 12, uk: "Чекаю на тебе.", en: "Waiting for you.", ja: "待ってるね。" },
-            { id: 13, uk: "Хочу тебе побачити.", en: "Want to see you.", ja: "早く会いたいな。" },
-            { id: 14, uk: "Ти – мій позитив.", en: "Good energy.", ja: "元気もらえるよ。" },
-            { id: 15, uk: "Солодких снів.", en: "Sweet dreams.", ja: "おやすみ、いい夢見てね。" }
+            { id: 1, uk: "Привіт, сонечко.", en: "Hey, sunshine.", ja: "やっほー。", sound: "Yah-hoh." },
+            { id: 2, uk: "Як ти?", en: "How are you?", ja: "元気？", sound: "Ghen-key?" },
+            { id: 3, uk: "Скучив за тобою.", en: "I missed you.", ja: "会いたかったよ。", sound: "Eye-tah-kat-tah yoh." },
+            { id: 4, uk: "Ти у мене найкраща.", en: "You're the best.", ja: "やっぱりあなたが一番。", sound: "Yap-pah-ree ah-nah-tah gah ee-chee-bahn." },
+            { id: 5, uk: "Красуня.", en: "You look great.", ja: "かっこいいね。", sound: "Kah-koy-ee neh." },
+            { id: 6, uk: "Обіймаю міцно.", en: "Big hug.", ja: "ぎゅーってしたい。", sound: "Gyuuu-teh she-tie." },
+            { id: 7, uk: "Цілую.", en: "Kisses.", ja: "チュッてして。", sound: "Choo-teh she-teh." },
+            { id: 8, uk: "Ти — моє щастя.", en: "You are my happiness.", ja: "私の癒しだよ。", sound: "Wah-tah-she no ee-yah-she dah yoh." },
+            { id: 9, uk: "Гарного дня.", en: "Have a good day.", ja: "今日も頑張ってね。", sound: "Kyo moh gam-bat-teh neh." },
+            { id: 10, uk: "Чекаю на тебе.", en: "Waiting for you.", ja: "待ってるね。", sound: "Mat-teh-roo neh." },
+            { id: 11, uk: "Хочу тебе побачити.", en: "Want to see you.", ja: "早く会いたいな。", sound: "Hah-yah-koo eye-tie nah." },
+            { id: 12, uk: "Ти додаєш мені сил.", en: "You give me strength.", ja: "元気もらえるよ。", sound: "Ghen-key moh-rah-eh-roo yoh." },
+            { id: 13, uk: "Солодких снів, моя зірочка.", en: "Goodnight, sweet dreams.", ja: "おやすみ、いい夢見てね。", sound: "Oh-yah-soo-me, ee yoo-meh me-teh neh." }
         ];
 
         const appContainer = document.getElementById('app');
@@ -179,6 +161,7 @@
                 currentAudio.currentTime = 0;
             }
 
+            // Matches file pattern: "01_Chapter 1.mp3"
             const formattedId = String(id).padStart(2, '0');
             const filename = `${formattedId}_Chapter 1.mp3`;
             const path = `${langFolder}/${filename}`;
@@ -191,24 +174,26 @@
             const row = document.createElement('div');
             row.className = 'row';
 
-            // Ukrainian
-            const uk = document.createElement('div');
-            uk.className = 'cell playable ua-col';
-            uk.innerHTML = `${p.uk}<span class="icon">🔊</span>`;
-            uk.onclick = () => playAudio('ukrainian', p.id);
+            // Ukrainian Cell - pointing to 'ukrainian_v_2_0'
+            const ukCell = document.createElement('div');
+            ukCell.className = 'cell ua-col';
+            ukCell.onclick = () => playAudio('ukrainian_v_2_0', p.id);
+            ukCell.innerHTML = `
+                <div class="main-text">${p.uk}<span class="icon">🔊</span></div>
+                <div class="sub-text">${p.en}</div>
+            `;
 
-            // English
-            const en = document.createElement('div');
-            en.className = 'cell en-col';
-            en.textContent = p.en;
+            // Japanese Cell - pointing to 'japanese_v_2_0'
+            const jaCell = document.createElement('div');
+            jaCell.className = 'cell jp-col';
+            jaCell.onclick = () => playAudio('japanese_v_2_0', p.id);
+            jaCell.innerHTML = `
+                <div class="main-text">${p.ja}<span class="icon">🔊</span></div>
+                <div class="sub-text">${p.sound}</div>
+            `;
 
-            // Japanese
-            const ja = document.createElement('div');
-            ja.className = 'cell playable jp-col';
-            ja.innerHTML = `${p.ja}<span class="icon">🔊</span>`;
-            ja.onclick = () => playAudio('japanese', p.id);
-
-            row.append(uk, en, ja);
+            row.appendChild(ukCell);
+            row.appendChild(jaCell);
             appContainer.appendChild(row);
         });
     </script>
