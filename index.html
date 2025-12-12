@@ -16,11 +16,34 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fafafa;
+            background-color: #fafafa; /* Fallback color */
             color: #333;
             margin: 0;
             padding: 10px;
             overflow-x: hidden; 
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Background Image Configuration:
+           1. Creates a pseudo-element behind the content.
+           2. Loads 'background.png'.
+           3. Tiles it (repeat).
+           4. Sets opacity to 30%.
+        */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('background.png');
+            background-repeat: repeat; /* This tiles the image horizontally and vertically */
+            background-size: auto;     /* Keeps original image size for tiling */
+            opacity: 0.3;              /* 30% Opacity */
+            z-index: -1;               /* Send to back */
+            pointer-events: none;      /* Ensure clicks pass through */
         }
 
         h1 {
@@ -29,19 +52,28 @@
             color: #555;
             margin: 10px 0 5px 0;
             font-weight: 600;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8); /* Improve legibility on bg */
         }
 
         .hint {
             text-align: center;
             font-size: 0.75rem;
-            color: #999;
+            color: #777;
             margin-bottom: 15px;
+            background-color: rgba(255,255,255,0.8); /* Background box for readability */
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         #app {
-            background: white;
+            background: rgba(255, 255, 255, 0.95); /* High opacity white to pop against background */
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             max-width: 600px;
             margin: 0 auto;
             border: 1px solid var(--border);
